@@ -1,5 +1,5 @@
 import { deleteListing } from "./listingAPI";
-import { useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { ListingsContext } from "./ListingsContext";
 
 function ListingCard(props) {
@@ -13,14 +13,6 @@ function ListingCard(props) {
   const searchRegex = new RegExp(`(.*)(${searchTerm})(.*)`, 'i');
   const searchMatch = searchTerm && description.toLowerCase().match(searchRegex);
   const highlightedDescription = searchMatch && description.replace(searchRegex, `$1<span class="highlight">$2</span>$3`);
-  const test = searchMatch && description.replace(searchRegex, `$1<span class="highlight">$2</span>$3`);
-  /* 
-    function highlightedDescription() {
-      if (searchMatch) {
-        return <span dangerouslySetInnerHTML={{ __html: highlightSpan }} />;
-      }
-      return description;
-    } */
 
   const handleDelete = () => {
     console.debug('ListingCard: handleDelete');
@@ -44,11 +36,13 @@ function ListingCard(props) {
         <img src={image} alt={"description"} />
       </div>
       <div className="details">
-        <FavoriteButton isFavorite={isFavorite} onFavorite={handleFavorite} />
         <strong dangerouslySetInnerHTML={{ __html: highlightedDescription || description }} />
         <br />
         <span>{location}</span>
-        <DeleteButton listing={listing} onDelete={handleDelete} />
+        <div>
+          <FavoriteButton isFavorite={isFavorite} onFavorite={handleFavorite} />
+          <DeleteButton listing={listing} onDelete={handleDelete} />
+        </div>
       </div>
     </li>
   );
@@ -62,7 +56,7 @@ function FavoriteButton(props) {
       className={['emoji-button', 'favorite', isFavorite && 'active'].filter(Boolean).join(' ')}
       onClick={onFavorite}
     >
-      {isFavorite ? '★' : '☆'}
+      {isFavorite ? '★' : '☆'} Favorite
     </button>
   );
 }
@@ -75,7 +69,7 @@ function DeleteButton(props) {
       className="emoji-button delete"
       onClick={onDelete}
     >
-      🗑❌
+      ❌Delete
     </button>
   );
 }
